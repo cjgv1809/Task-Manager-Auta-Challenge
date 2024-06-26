@@ -41,6 +41,7 @@ const TaskItem: React.FC<Props> = ({ task, onNotification }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
+  // functions to handle task actions
   const handleComplete = useCallback(async () => {
     try {
       await updateDoc(doc(db, "tasks", task.id), {
@@ -53,7 +54,14 @@ const TaskItem: React.FC<Props> = ({ task, onNotification }) => {
     }
   }, [task.id, task.completed, onNotification]);
 
-  const handleEdit = useCallback(() => setEditing(true), []);
+  const handleEdit = useCallback(() => {
+    if (!task.completed) {
+      setEditing(true);
+    } else {
+      onNotification("No puedes editar una tarea completada", "warning");
+    }
+  }, [task.completed, onNotification]);
+
   const handleDeleteClick = useCallback(() => setDeleteConfirmOpen(true), []);
 
   const handleDeleteConfirm = useCallback(async () => {
@@ -71,6 +79,26 @@ const TaskItem: React.FC<Props> = ({ task, onNotification }) => {
 
   const handleSave = useCallback(async () => {
     try {
+      if (!editTitle || editTitle.trim() === "") {
+        onNotification("El título de la tarea no puede estar vacío", "warning");
+        return;
+      }
+      if (!editDescription || editDescription.trim() === "") {
+        onNotification(
+          "La descripción de la tarea no puede estar vacía",
+          "warning"
+        );
+        return;
+      }
+      if (
+        editTitle.trim() === task.title.trim() ||
+        editDescription.trim() === task.description.trim()
+      ) {
+        onNotification("No se realizaron cambios en la tarea", "warning");
+        setEditing(false);
+        return;
+      }
+
       await updateDoc(doc(db, "tasks", task.id), {
         title: editTitle,
         description: editDescription,
@@ -89,10 +117,12 @@ const TaskItem: React.FC<Props> = ({ task, onNotification }) => {
     setEditing(false);
   }, [task.title, task.description]);
 
+  // text style for task content when completed
   const getTextStyle = (completed: boolean): CSSProperties => ({
     textDecoration: completed ? "line-through" : "none",
   });
 
+  // actions buttons and icons for mobile and desktop views
   const renderActions = useCallback(() => {
     if (editing) {
       return (
@@ -205,6 +235,7 @@ const TaskItem: React.FC<Props> = ({ task, onNotification }) => {
     handleDeleteClick,
   ]);
 
+  // edit form with textfields
   const renderEditForm = () => (
     <Box width="100%">
       <TextField
@@ -229,6 +260,7 @@ const TaskItem: React.FC<Props> = ({ task, onNotification }) => {
     </Box>
   );
 
+  // task content with checkbox
   const renderTaskContent = () => (
     <Box display="flex" alignItems="center" width="100%">
       <ListItemIcon>
