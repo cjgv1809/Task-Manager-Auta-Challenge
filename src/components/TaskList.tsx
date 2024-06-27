@@ -18,7 +18,6 @@ const TaskList: React.FC = () => {
   const { handleNotification } = useNotification();
 
   const isSearching = searchTerm !== "";
-  const noTasksExist = tasks.length === 0;
 
   useEffect(() => {
     const q = query(collection(db, "tasks"), orderBy("createdAt", "desc"));
