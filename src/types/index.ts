@@ -12,7 +12,7 @@ export interface TaskFormData {
   description: string;
 }
 
-export interface UseSearchContextType {
+export interface SearchContextType {
   searchTerm: string;
   setSearchTerm: (term: string) => void;
 }
@@ -43,10 +43,4 @@ export interface UseTaskItemResultType {
   handleCancel: () => void;
   setEditTitle: (title: string) => void;
   setEditDescription: (description: string) => void;
-}
-
-export interface NotificationStateType {
-  open: boolean;
-  message: string;
-  severity: Severity;
 }
