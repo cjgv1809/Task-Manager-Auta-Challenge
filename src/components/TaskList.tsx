@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { collection, query, onSnapshot, orderBy } from "firebase/firestore";
-import { List, Typography } from "@mui/material";
+import { Collapse, Grow, List } from "@mui/material";
+import { TransitionGroup } from "react-transition-group";
 import db from "@/firebase";
 import { useSearch } from "@/hooks/useSearch";
 import { useNotification } from "@/hooks/useNotification";
 import type { Task } from "@/types";
 import TaskItem from "./TaskItem";
 import Skeleton from "./Skeleton";
+import EmptyTaskList from "./EmptyTaskList";
 
 const TaskList: React.FC = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
@@ -14,6 +16,9 @@ const TaskList: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const { searchTerm } = useSearch();
   const { handleNotification } = useNotification();
+
+  const isSearching = searchTerm !== "";
+  const noTasksExist = tasks.length === 0;
 
   useEffect(() => {
     const q = query(collection(db, "tasks"), orderBy("createdAt", "desc"));
@@ -57,14 +62,27 @@ const TaskList: React.FC = () => {
     <>
       {filteredTasks.length > 0 ? (
         <List>
-          {filteredTasks.map((task) => (
-            <TaskItem key={task.id} task={task} />
-          ))}
+          <TransitionGroup>
+            {filteredTasks.map((task, index) => (
+              <Collapse key={task.id}>
+                <Grow
+                  in={true}
+                  style={{ transformOrigin: "0 0 0" }}
+                  {...{ timeout: 1000 + index * 100 }}
+                >
+                  <div>
+                    <TaskItem task={task} />
+                  </div>
+                </Grow>
+              </Collapse>
+            ))}
+          </TransitionGroup>
         </List>
       ) : (
-        <Typography variant="h5" component="p" align="center">
-          No se encontraron tareas.
-        </Typography>
+        <EmptyTaskList
+          isSearching={isSearching && !noTasksExist}
+          searchTerm={searchTerm}
+        />
       )}
     </>
   );
