@@ -71,7 +71,11 @@ Para correr este proyecto, necesitarás agregar un archivo `.env` en la carpeta 
 
 ## Capturas de pantalla
 
-![App Screenshot](https://via.placeholder.com/468x300?text=App+Screenshot+Here)
+<img src="https://github.com/cjgv1809/Task-Manager-Auta-Challenge/assets/57246901/77a7c643-1ccd-4782-9e25-5b987350e322" alt="Desktop view" width="400" />
+
+<img src="https://github.com/cjgv1809/Task-Manager-Auta-Challenge/assets/57246901/ae84db90-7763-4571-afc1-2d0ecfdc7c6c" alt="Tablet view" width="400" />
+
+<img src="https://github.com/cjgv1809/Task-Manager-Auta-Challenge/assets/57246901/44d382ee-f3d1-49d9-8def-40084bfaac79" alt="Mobile view" width="400" />
 
 ## Documentación
 
