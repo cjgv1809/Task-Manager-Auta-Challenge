@@ -1,6 +1,6 @@
 import React from "react";
 import { Snackbar, Alert } from "@mui/material";
-import type { Severity } from "../types";
+import type { Severity } from "@/types";
 
 interface Props {
   open: boolean;
