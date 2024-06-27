@@ -31,8 +31,20 @@ const TaskForm: React.FC = () => {
     }
   };
 
+  const handleKeyDown = (event: React.KeyboardEvent) => {
+    if (event.key === "Enter" && !event.shiftKey) {
+      event.preventDefault();
+      handleSubmit(onSubmit)();
+    }
+  };
+
   return (
-    <Box component="form" onSubmit={handleSubmit(onSubmit)} sx={{ mb: 4 }}>
+    <Box
+      component="form"
+      onSubmit={handleSubmit(onSubmit)}
+      onKeyDown={handleKeyDown}
+      sx={{ mb: 4 }}
+    >
       <TextField
         {...register("title", {
           required: "El título es requerido",
@@ -67,7 +79,9 @@ const TaskForm: React.FC = () => {
         rows={3}
         margin="normal"
         error={!!errors.description}
-        helperText={errors.description?.message}
+        helperText={
+          errors.description?.message || "Presiona Shift+Enter para nueva línea"
+        }
       />
       <Box sx={{ display: "flex", justifyContent: "center" }}>
         <Button
