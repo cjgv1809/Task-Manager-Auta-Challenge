@@ -79,10 +79,7 @@ const TaskList: React.FC = () => {
           </TransitionGroup>
         </List>
       ) : (
-        <EmptyTaskList
-          isSearching={isSearching && !noTasksExist}
-          searchTerm={searchTerm}
-        />
+        <EmptyTaskList isSearching={isSearching} searchTerm={searchTerm} />
       )}
     </>
   );
