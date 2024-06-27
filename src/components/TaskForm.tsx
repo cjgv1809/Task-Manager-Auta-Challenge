@@ -3,20 +3,18 @@ import { useForm } from "react-hook-form";
 import { TextField, Button, Box } from "@mui/material";
 import { collection, addDoc } from "firebase/firestore";
 import { Add as AddIcon } from "@mui/icons-material";
-import db from "../firebase";
-import type { Severity, TaskFormData } from "../types";
+import db from "@/firebase";
+import { useNotification } from "@/hooks/useNotification";
+import type { TaskFormData } from "@/types";
 
-interface Props {
-  onNotification: (message: string, severity: Severity) => void;
-}
-
-const TaskForm: React.FC<Props> = ({ onNotification }) => {
+const TaskForm: React.FC = () => {
   const {
     register,
     handleSubmit,
     reset,
     formState: { errors },
   } = useForm<TaskFormData>();
+  const { handleNotification } = useNotification();
 
   const onSubmit = async (data: TaskFormData) => {
     try {
@@ -26,10 +24,10 @@ const TaskForm: React.FC<Props> = ({ onNotification }) => {
         createdAt: new Date(),
       });
       reset();
-      onNotification("Tarea agregada exitosamente", "success");
+      handleNotification("Tarea agregada exitosamente", "success");
     } catch (error) {
       console.error("Error adding document: ", error);
-      onNotification("Error al agregar la tarea", "error");
+      handleNotification("Error al agregar la tarea", "error");
     }
   };
 
