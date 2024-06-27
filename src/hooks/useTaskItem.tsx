@@ -1,5 +1,3 @@
-// useTaskItem.ts
-
 import { useState, useCallback } from "react";
 import { doc, updateDoc, deleteDoc } from "firebase/firestore";
 import db from "@/firebase";
