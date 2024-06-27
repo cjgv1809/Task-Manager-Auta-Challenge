@@ -1,18 +1,19 @@
 import React, { useEffect, useState } from "react";
 import { collection, query, onSnapshot, orderBy } from "firebase/firestore";
 import { List, Typography } from "@mui/material";
+import db from "@/firebase";
+import { useSearch } from "@/hooks/useSearch";
+import { useNotification } from "@/hooks/useNotification";
+import type { Task } from "@/types";
 import TaskItem from "./TaskItem";
-import db from "../firebase";
-import type { Severity, Task } from "../types";
+import Skeleton from "./Skeleton";
 
-interface Props {
-  onNotification: (message: string, severity: Severity) => void;
-  searchTerm: string;
-}
-
-const TaskList: React.FC<Props> = ({ onNotification, searchTerm }) => {
+const TaskList: React.FC = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [filteredTasks, setFilteredTasks] = useState<Task[]>([]);
+  const [loading, setLoading] = useState(true);
+  const { searchTerm } = useSearch();
+  const { handleNotification } = useNotification();
 
   useEffect(() => {
     const q = query(collection(db, "tasks"), orderBy("createdAt", "desc"));
@@ -24,15 +25,17 @@ const TaskList: React.FC<Props> = ({ onNotification, searchTerm }) => {
           tasksData.push({ id: doc.id, ...doc.data() } as Task);
         });
         setTasks(tasksData);
+        setLoading(false);
       },
       (error) => {
         console.error("Error fetching tasks: ", error);
-        onNotification("Error al cargar las tareas", "error");
+        handleNotification("Error al cargar las tareas", "error");
+        setLoading(false);
       }
     );
 
     return () => unsubscribe();
-  }, [onNotification]);
+  }, [handleNotification]);
 
   useEffect(() => {
     if (searchTerm) {
@@ -48,21 +51,19 @@ const TaskList: React.FC<Props> = ({ onNotification, searchTerm }) => {
     }
   }, [tasks, searchTerm]);
 
+  if (loading) return <Skeleton />;
+
   return (
     <>
       {filteredTasks.length > 0 ? (
         <List>
           {filteredTasks.map((task) => (
-            <TaskItem
-              key={task.id}
-              task={task}
-              onNotification={onNotification}
-            />
+            <TaskItem key={task.id} task={task} />
           ))}
         </List>
       ) : (
-        <Typography variant="body1" align="center">
-          No se encontraron tareas que coincidan con la búsqueda
+        <Typography variant="h5" component="p" align="center">
+          No se encontraron tareas.
         </Typography>
       )}
     </>
