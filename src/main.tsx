@@ -2,6 +2,8 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
+import { SearchProvider } from "./context/SearchContext.tsx";
+import { NotificationProvider } from "./context/NotificationContext.tsx";
 import App from "./App.tsx";
 
 const theme = createTheme({
@@ -75,7 +77,11 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
   <ThemeProvider theme={theme}>
     <CssBaseline />
     <React.StrictMode>
-      <App />
+      <SearchProvider>
+        <NotificationProvider>
+          <App />
+        </NotificationProvider>
+      </SearchProvider>
     </React.StrictMode>
   </ThemeProvider>
 );
