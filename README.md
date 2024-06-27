@@ -33,7 +33,7 @@ Para configurar el proyecto, siga los siguientes pasos:
 1. Clona el repositorio:
 
    ```sh
-   git clone https://github.com/cjgv1809/task-manager.git
+   git clone https://github.com/cjgv1809/Task-Manager-Auta-Challenge.git
    cd task-manager
    ```
 
@@ -43,9 +43,15 @@ Para configurar el proyecto, siga los siguientes pasos:
    pnpm install
    ```
 
+3. Levanta el server de desarrollo:
+
+   ```sh
+   pnpm run dev
+   ```
+
 ## Variables de entorno
 
-Para correr este proyecto, necesitarás agregar un archivo `.env` con las siguientes variables:
+Para correr este proyecto, necesitarás agregar un archivo `.env` en la carpeta raíz (a nivel del package.json) con las siguientes variables:
 
 `VITE_FIREBASE_CONFIG_API_KEY`
 
